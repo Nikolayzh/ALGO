@@ -1,0 +1,4 @@
+ALGO
+====
+
+Saves all algorithms
