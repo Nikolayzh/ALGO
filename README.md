@@ -1,4 +1,0 @@
-ALGO
-====
-
-Saves all algorithms
