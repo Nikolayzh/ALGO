@@ -1,0 +1,20 @@
+ void solve() {
+         used = new boolean [vNum]; // массив пометок
+         cc = new int [vNum]; // сс[v] = номер компоненты, к которой принадлежит v
+         ccNum = 0; // количество компонент
+         
+         for (int v = 0; v < vNum; v++) { // перебираем вершины
+               if (!used[v]) { // если текущая не помечена
+                   ccNum++; // значит мы нашли компоненту связности 
+            dfs(v); // запускаем на ней DFS
+               }
+         }
+     }
+     
+     void dfs(int v) {
+         used[v] = true;
+         cc[v] = ccNum; // ставим текущей вершине в соответствие номер компоненты
+         for (int nv = 0; nv < vNum; nv++)
+             if (!used[nv] && graph[v][nv])
+                 dfs(nv);
+     }
