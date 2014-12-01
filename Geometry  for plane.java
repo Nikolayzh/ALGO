@@ -9,7 +9,7 @@ public class Geometry2D {
 	
 	double EPS = 1e-7;
 	
-	/* Тесты */
+	/* РўРµСЃС‚С‹ */
 	void run() {
 //		Circle2D c = new Circle2D(new Point2D(0, 0), 3);
 //		Point2D p = new Point2D(-3, 0);
@@ -33,11 +33,11 @@ public class Geometry2D {
 //		System.out.println(Arrays.toString(largestTriangle(p)));
 	}
 	
-	/* Геометрия на плоскости */
+	/* Р“РµРѕРјРµС‚СЂРёСЏ РЅР° РїР»РѕСЃРєРѕСЃС‚Рё */
 	
-	/* 01. Пересечения плоских фигур */
+	/* 01. РџРµСЂРµСЃРµС‡РµРЅРёСЏ РїР»РѕСЃРєРёС… С„РёРіСѓСЂ */
 	
-	/* Пересечение прямых (основано на методе Крамера) */
+	/* РџРµСЂРµСЃРµС‡РµРЅРёРµ РїСЂСЏРјС‹С… (РѕСЃРЅРѕРІР°РЅРѕ РЅР° РјРµС‚РѕРґРµ РљСЂР°РјРµСЂР°) */
 	Point2D cll(Line2D l1, Line2D l2) {
 		double det = -det2x2(l1.A, l1.B, l2.A, l2.B);
 		if (abs(det) < EPS)
@@ -45,13 +45,13 @@ public class Geometry2D {
 		return new Point2D(det2x2(l1.C, l1.B, l2.C, l2.B) / det, det2x2(l1.A, l1.C, l2.A, l2.C) / det);
 	}
 	
-	/* Пересечение отрезков */
+	/* РџРµСЂРµСЃРµС‡РµРЅРёРµ РѕС‚СЂРµР·РєРѕРІ */
 	Point2D css(Line2D s1, Line2D s2) {
 		Point2D its = cll(s1, s2);
 		return (its != null && s1.contains(its) && s2.contains(its)) ? its : null;
 	}
 	
-	/* Пересечение прямой и окружности */
+	/* РџРµСЂРµСЃРµС‡РµРЅРёРµ РїСЂСЏРјРѕР№ Рё РѕРєСЂСѓР¶РЅРѕСЃС‚Рё */
 	Point2D[] clc(Line2D l, Circle2D c) {
 		double d = l.dist(c.c);
 		if (d > c.r + EPS)
@@ -61,10 +61,10 @@ public class Geometry2D {
 		return new Point2D[] { h.sub(v), h.add(v) };
 	}
 	
-	/* Пересечение окружностей */
+	/* РџРµСЂРµСЃРµС‡РµРЅРёРµ РѕРєСЂСѓР¶РЅРѕСЃС‚РµР№ */
 	Point2D[] ccc(Circle2D c1, Circle2D c2) {
 		double d = dist(c1.c, c2.c);
-		if (d < EPS && c1.r < EPS && c2.r < EPS) // крайний случай
+		if (d < EPS && c1.r < EPS && c2.r < EPS) // РєСЂР°Р№РЅРёР№ СЃР»СѓС‡Р°Р№
 			return new Point2D[] { c1.c };
 		if (d < abs(c1.r - c2.r) - EPS || d > c1.r + c2.r + EPS || d < EPS)
 			return null;
@@ -74,9 +74,9 @@ public class Geometry2D {
 		return new Point2D[] { c1.c.add(v.rotate(cos, sin)), c1.c.add(v.rotate(cos, -sin)) };
 	}
 	
-	/* 02. Касательные */
+	/* 02. РљР°СЃР°С‚РµР»СЊРЅС‹Рµ */
 	
-	/* Касательная из точки на окружности */
+	/* РљР°СЃР°С‚РµР»СЊРЅР°СЏ РёР· С‚РѕС‡РєРё РЅР° РѕРєСЂСѓР¶РЅРѕСЃС‚Рё */
 	Line2D tcpc(Point2D p, Circle2D c) {
 		if (c.r < EPS || !c.lay(p))
 			return null;
@@ -84,7 +84,7 @@ public class Geometry2D {
 		return new Line2D(p.sub(n), p.add(n));
 	}
 	
-	/* Касательные из точки к окружности */
+	/* РљР°СЃР°С‚РµР»СЊРЅС‹Рµ РёР· С‚РѕС‡РєРё Рє РѕРєСЂСѓР¶РЅРѕСЃС‚Рё */
 	Line2D[] tpc(Point2D p, Circle2D c) {
 		double d = dist(p, c.c);
 		if (d < c.r - EPS || abs(d) < EPS)
@@ -97,7 +97,7 @@ public class Geometry2D {
 		return new Line2D[] { new Line2D(p, p.add(v.rotate(cos, sin))), new Line2D(p, p.add(v.rotate(cos, -sin))) };
 	}
 	
-	/* Внутренние касательные между окружностями */
+	/* Р’РЅСѓС‚СЂРµРЅРЅРёРµ РєР°СЃР°С‚РµР»СЊРЅС‹Рµ РјРµР¶РґСѓ РѕРєСЂСѓР¶РЅРѕСЃС‚СЏРјРё */
 	Line2D[] intcc(Circle2D c1, Circle2D c2) {
 		Line2D[] h = tpc(c2.c, new Circle2D(c1.c, c1.r + c2.r));
 		if (h != null) {
@@ -107,7 +107,7 @@ public class Geometry2D {
 		return h;
 	}
 	
-	/* Внешние касательные между окружностями (c1.r <= c2.r) */
+	/* Р’РЅРµС€РЅРёРµ РєР°СЃР°С‚РµР»СЊРЅС‹Рµ РјРµР¶РґСѓ РѕРєСЂСѓР¶РЅРѕСЃС‚СЏРјРё (c1.r <= c2.r) */
 	Line2D[] outtcc(Circle2D c1, Circle2D c2) {
 		if (c1.r > c2.r + EPS)
 			return outtcc(c2, c1);
@@ -119,14 +119,14 @@ public class Geometry2D {
 		return h;
 	}
 	
-	/* 03. Площади */
+	/* 03. РџР»РѕС‰Р°РґРё */
 	
-	/* Площадь треугольника */
+	/* РџР»РѕС‰Р°РґСЊ С‚СЂРµСѓРіРѕР»СЊРЅРёРєР° */
 	double area(Point2D p1, Point2D p2, Point2D p3) {
 		return 0.5 * abs(cross(p1, p2, p3));
 	}
 	
-	/* Площадь многоугольника */
+	/* РџР»РѕС‰Р°РґСЊ РјРЅРѕРіРѕСѓРіРѕР»СЊРЅРёРєР° */
 	double area(Point2D[] p) {
 		if (p.length < 3)
 			return 0.0;
@@ -136,9 +136,9 @@ public class Geometry2D {
 		return 0.5 * ret;
 	}
 	
-	/* 04. Выпуклая оболочка */
+	/* 04. Р’С‹РїСѓРєР»Р°СЏ РѕР±РѕР»РѕС‡РєР° */
 	
-	/* Алгоритм Грэхэма */	
+	/* РђР»РіРѕСЂРёС‚Рј Р“СЂСЌС…СЌРјР° */	
 	Point2D[] greham(Point2D[] p) {
 		int k = lowestRight(p);
 		int n = p.length;
@@ -166,9 +166,9 @@ public class Geometry2D {
 		return ret;
 	}
 	
-	/* 05. Другое */
+	/* 05. Р”СЂСѓРіРѕРµ */
 	
-	/* Принадлежность многоугольнику */
+	/* РџСЂРёРЅР°РґР»РµР¶РЅРѕСЃС‚СЊ РјРЅРѕРіРѕСѓРіРѕР»СЊРЅРёРєСѓ */
 	boolean insidePoly(Point2D p, Point2D[] poly) {
 		double sum = 0.0;
 		int n = poly.length;
@@ -181,7 +181,7 @@ public class Geometry2D {
 		return abs(abs(sum) - PI * 2) < EPS;
 	}
 	
-	/* Возвращает наибольший треугольник построенный на данных точках O(n)  */
+	/* Р’РѕР·РІСЂР°С‰Р°РµС‚ РЅР°РёР±РѕР»СЊС€РёР№ С‚СЂРµСѓРіРѕР»СЊРЅРёРє РїРѕСЃС‚СЂРѕРµРЅРЅС‹Р№ РЅР° РґР°РЅРЅС‹С… С‚РѕС‡РєР°С… O(n)  */
 	Point2D[] largestTriangle(Point2D[] poly) {
 		Point2D[] p = greham(enumerate(poly));
 		int n = p.length, b0 = -1, b1 = -1, b2 = -1;
@@ -211,7 +211,7 @@ public class Geometry2D {
 		return best < 0 ? null : new Point2D[] { p[b0], p[b1], p[b2] };
 	}
 	
-	/* Возвращает пару самых дальних точек O(n) */
+	/* Р’РѕР·РІСЂР°С‰Р°РµС‚ РїР°СЂСѓ СЃР°РјС‹С… РґР°Р»СЊРЅРёС… С‚РѕС‡РµРє O(n) */
 	Point2D[] farthestPoints(Point2D[] poly) {
 		Point2D[] p = greham(enumerate(poly));
 		int n = p.length;
@@ -246,9 +246,9 @@ public class Geometry2D {
 		return fp;
 	}
 	
-	/* Вспомогательные функции */
+	/* Р’СЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹Рµ С„СѓРЅРєС†РёРё */
 
-	/* Пронумеровывает точки */
+	/* РџСЂРѕРЅСѓРјРµСЂРѕРІС‹РІР°РµС‚ С‚РѕС‡РєРё */
 	Point2D[] enumerate(Point2D[] poly) {
 		for (int i = 0; i < poly.length; i++)
 			poly[i].id = i;
@@ -260,22 +260,22 @@ public class Geometry2D {
 		return x * x;
 	}
 	
-	/* Определитель матрицы 2x2 */ 
+	/* РћРїСЂРµРґРµР»РёС‚РµР»СЊ РјР°С‚СЂРёС†С‹ 2x2 */ 
 	double det2x2(double a11, double a12, double a21, double a22) {
 		return a11 * a22 - a12 * a21;
 	}
 	
-	/* Косое произведение по 3м точкам */
+	/* РљРѕСЃРѕРµ РїСЂРѕРёР·РІРµРґРµРЅРёРµ РїРѕ 3Рј С‚РѕС‡РєР°Рј */
 	double cross(Point2D p0, Point2D p1, Point2D p2) {
 		return (p1.x - p0.x) * (p2.y - p0.y) - (p2.x - p0.x) * (p1.y - p0.y);
 	}
 	
-	/* Теорема косинусов */
+	/* РўРµРѕСЂРµРјР° РєРѕСЃРёРЅСѓСЃРѕРІ */
 	double getCos(double a, double b, double c) {
 		return 0.5 * (a * a + b * b - c * c) / (a * b);
 	}
 	
-	/* Полярный угол p относительно c */
+	/* РџРѕР»СЏСЂРЅС‹Р№ СѓРіРѕР» p РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ c */
 	double getPolarAngle(Point2D c, Point2D p) {
 		return atan2(p.y - c.y, p.x - c.x);
 	}
@@ -295,35 +295,35 @@ public class Geometry2D {
 		return a <= x && x <= b;
 	}
 	
-	/* x в [a,b] */
+	/* x РІ [a,b] */
 	boolean range(double a, double x, double b) {
 		return between(a - EPS, x, b + EPS);
 	}
 	
-	/* x в (a,b) */
+	/* x РІ (a,b) */
 	boolean interval(double a, double x, double b) {
 		return between(a + EPS, x, b - EPS);
 	}
 	
-	/* Безопасный корень */
+	/* Р‘РµР·РѕРїР°СЃРЅС‹Р№ РєРѕСЂРµРЅСЊ */
 	double sqrt(double x) {
 		check(x >= -EPS);
 		return Math.sqrt(max(0.0, x));
 	}
 	
-	/* Безопасный арккосинус */
+	/* Р‘РµР·РѕРїР°СЃРЅС‹Р№ Р°СЂРєРєРѕСЃРёРЅСѓСЃ */
 	double acos(double x) {
 		check(range(-1.0, x, 1.0));
 		return Math.acos(max(-1.0, min(1.0, x)));
 	}
 	
-	/* Безопасные арксинус */	
+	/* Р‘РµР·РѕРїР°СЃРЅС‹Рµ Р°СЂРєСЃРёРЅСѓСЃ */	
 	double asin(double x) {
 		check(range(-1.0, x, 1.0));
 		return Math.asin(max(-1.0, min(1.0, x)));
 	}
 	
-	/* Проверяет условие, и если оно не выполняется кидает исключение */
+	/* РџСЂРѕРІРµСЂСЏРµС‚ СѓСЃР»РѕРІРёРµ, Рё РµСЃР»Рё РѕРЅРѕ РЅРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РєРёРґР°РµС‚ РёСЃРєР»СЋС‡РµРЅРёРµ */
 	void check(boolean state) {
 		if (!state) {
 			System.err.println(new Error().getStackTrace());
@@ -331,136 +331,136 @@ public class Geometry2D {
 		}
 	}
 	
-	/* Классы */
+	/* РљР»Р°СЃСЃС‹ */
 	
-	/* Точка (вектор) на плоскости XOY */
+	/* РўРѕС‡РєР° (РІРµРєС‚РѕСЂ) РЅР° РїР»РѕСЃРєРѕСЃС‚Рё XOY */
 	class Point2D {
-		int id; // иногда нужно
+		int id; // РёРЅРѕРіРґР° РЅСѓР¶РЅРѕ
 		
 		double x;
 		double y;
 		
-		/* Для выпуклой оболочки */
+		/* Р”Р»СЏ РІС‹РїСѓРєР»РѕР№ РѕР±РѕР»РѕС‡РєРё */
 		double d;
 		double a;
 		
-		/* Тривиальный конструктор */
+		/* РўСЂРёРІРёР°Р»СЊРЅС‹Р№ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ */
 		Point2D() {
 			x = y = 0.0;
 		}
 		
-		/* Основной конструктор */
+		/* РћСЃРЅРѕРІРЅРѕР№ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ */
 		Point2D(double x, double y) {
 			this.set(x, y);
 		}
 		
-		/* Задает координаты */
+		/* Р—Р°РґР°РµС‚ РєРѕРѕСЂРґРёРЅР°С‚С‹ */
 		Point2D set(double x, double y) {
 			this.x = x;
 			this.y = y;
 			return this;
 		}
 		
-		/* Возвращает копию */
+		/* Р’РѕР·РІСЂР°С‰Р°РµС‚ РєРѕРїРёСЋ */
 		Point2D copy() {
 			return new Point2D(x, y);
 		}
 		
-		/* Сумма векторов */
+		/* РЎСѓРјРјР° РІРµРєС‚РѕСЂРѕРІ */
 		Point2D add(Point2D v) {
 			return new Point2D(x + v.x, y + v.y);
 		}
 		
-		/* Перемещает точку на заданный вектор */
+		/* РџРµСЂРµРјРµС‰Р°РµС‚ С‚РѕС‡РєСѓ РЅР° Р·Р°РґР°РЅРЅС‹Р№ РІРµРєС‚РѕСЂ */
 		Point2D inc(Point2D v) {
 			return set(x + v.x, y + v.y);
 		}
 		
-		/* Разность векторов */
+		/* Р Р°Р·РЅРѕСЃС‚СЊ РІРµРєС‚РѕСЂРѕРІ */
 		Point2D sub(Point2D v) {
 			return new Point2D(x - v.x, y - v.y);
 		}
 		
-		/* Аналогично inc, но в обратном направлении */
+		/* РђРЅР°Р»РѕРіРёС‡РЅРѕ inc, РЅРѕ РІ РѕР±СЂР°С‚РЅРѕРј РЅР°РїСЂР°РІР»РµРЅРёРё */
 		Point2D dec(Point2D v) {
 			return set(x - v.x, y - v.y);
 		}
 		
-		/* Произведение вектора на скаляр */
+		/* РџСЂРѕРёР·РІРµРґРµРЅРёРµ РІРµРєС‚РѕСЂР° РЅР° СЃРєР°Р»СЏСЂ */
 		Point2D mul(double K) {
 			return new Point2D(K * x, K * y);
 		}
 		
-		/* Масштабирует вектор */
+		/* РњР°СЃС€С‚Р°Р±РёСЂСѓРµС‚ РІРµРєС‚РѕСЂ */
 		Point2D scale(double K) {
 			return set(K * x, K * y);
 		}
 		
-		/* Возвращает длину вектора */
+		/* Р’РѕР·РІСЂР°С‰Р°РµС‚ РґР»РёРЅСѓ РІРµРєС‚РѕСЂР° */
 		double len() {
 			return sqrt(x * x + y * y);
 		}
 		
-		/* Возращает нормированный вектор */		
+		/* Р’РѕР·СЂР°С‰Р°РµС‚ РЅРѕСЂРјРёСЂРѕРІР°РЅРЅС‹Р№ РІРµРєС‚РѕСЂ */		
 		Point2D norm() {
 			return norm(1.0);
 		}
 		
-		/* Возращает нормированный (до заданной длины) вектор */
+		/* Р’РѕР·СЂР°С‰Р°РµС‚ РЅРѕСЂРјРёСЂРѕРІР°РЅРЅС‹Р№ (РґРѕ Р·Р°РґР°РЅРЅРѕР№ РґР»РёРЅС‹) РІРµРєС‚РѕСЂ */
 		Point2D norm(double newLen) {
 			return this.mul(newLen / len());
 		}
 		
-		/* Нормализует вектор */
+		/* РќРѕСЂРјР°Р»РёР·СѓРµС‚ РІРµРєС‚РѕСЂ */
 		Point2D normalize() {
 			return this.normalize(1.0);
 		}
 		
-		/* Нормализует вектор до заданной длины */
+		/* РќРѕСЂРјР°Р»РёР·СѓРµС‚ РІРµРєС‚РѕСЂ РґРѕ Р·Р°РґР°РЅРЅРѕР№ РґР»РёРЅС‹ */
 		Point2D normalize(double newLen) {
 			return scale(newLen / len());
 		}
 		
-		/* Скалярное произведение */
+		/* РЎРєР°Р»СЏСЂРЅРѕРµ РїСЂРѕРёР·РІРµРґРµРЅРёРµ */
 		double scalarProduct(Point2D v) {
 			return x * v.x + y * v.y;
 		}
 		
-		/* Косое произведение */
+		/* РљРѕСЃРѕРµ РїСЂРѕРёР·РІРµРґРµРЅРёРµ */
 		double crossProduct(Point2D v) {
 			return x * v.y - v.x * y;
 		}
 		
-		/* Возвращает вектор повернутый на 90 градусов (CCV) */
+		/* Р’РѕР·РІСЂР°С‰Р°РµС‚ РІРµРєС‚РѕСЂ РїРѕРІРµСЂРЅСѓС‚С‹Р№ РЅР° 90 РіСЂР°РґСѓСЃРѕРІ (CCV) */
 		Point2D rotate90() {
 			return new Point2D(-y, x);
 		}
 		
-		/* Возвращает вектор повернутый на angle радиан (CCV) */
+		/* Р’РѕР·РІСЂР°С‰Р°РµС‚ РІРµРєС‚РѕСЂ РїРѕРІРµСЂРЅСѓС‚С‹Р№ РЅР° angle СЂР°РґРёР°РЅ (CCV) */
 		Point2D rotate(double angle) {
 			double cos = cos(angle);
 			double sin = sin(angle);
 			return rotate(cos, sin);
 		}
 		
-		/* Возвращает вектор повернутый по заданым косинусу и синусу (CCV) */
+		/* Р’РѕР·РІСЂР°С‰Р°РµС‚ РІРµРєС‚РѕСЂ РїРѕРІРµСЂРЅСѓС‚С‹Р№ РїРѕ Р·Р°РґР°РЅС‹Рј РєРѕСЃРёРЅСѓСЃСѓ Рё СЃРёРЅСѓСЃСѓ (CCV) */
 		Point2D rotate(double cos, double sin) {
 			return new Point2D(x * cos - y * sin, x * sin + y * cos);
 		}
 		
-		/* Поворачивает вектор на 90 градусов (CCV) */
+		/* РџРѕРІРѕСЂР°С‡РёРІР°РµС‚ РІРµРєС‚РѕСЂ РЅР° 90 РіСЂР°РґСѓСЃРѕРІ (CCV) */
 		Point2D turn90() {
 			return set(-y, x);
 		}
 		
-		/* Поворачивает вектор на angle радиан (CCV) */
+		/* РџРѕРІРѕСЂР°С‡РёРІР°РµС‚ РІРµРєС‚РѕСЂ РЅР° angle СЂР°РґРёР°РЅ (CCV) */
 		Point2D turn(double angle) {
 			double cos = cos(angle);
 			double sin = sin(angle);
 			return turn(cos, sin);
 		}
 
-		/* Поворачивает вектор по заданым косинусу и синусу (CCV) */
+		/* РџРѕРІРѕСЂР°С‡РёРІР°РµС‚ РІРµРєС‚РѕСЂ РїРѕ Р·Р°РґР°РЅС‹Рј РєРѕСЃРёРЅСѓСЃСѓ Рё СЃРёРЅСѓСЃСѓ (CCV) */
 		Point2D turn(double cos, double sin) {
 			return set(x * cos - y * sin, x * sin + y * cos);
 		}
@@ -493,7 +493,7 @@ public class Geometry2D {
 		}
 	}
 	
-	/* Прямая (отрезок) на плоскости XOY */
+	/* РџСЂСЏРјР°СЏ (РѕС‚СЂРµР·РѕРє) РЅР° РїР»РѕСЃРєРѕСЃС‚Рё XOY */
 	class Line2D {
 		Point2D p1;
 		Point2D p2;
@@ -501,17 +501,17 @@ public class Geometry2D {
 		double B;
 		double C;
 		
-		/* Прямая по 2м точкам */
+		/* РџСЂСЏРјР°СЏ РїРѕ 2Рј С‚РѕС‡РєР°Рј */
 		Line2D(Point2D p1, Point2D p2) {
 			this.set(p1.copy(), p2.copy());
 		}
 
-		/* Прямая через точку, перпендикулярно данной прямой */
+		/* РџСЂСЏРјР°СЏ С‡РµСЂРµР· С‚РѕС‡РєСѓ, РїРµСЂРїРµРЅРґРёРєСѓР»СЏСЂРЅРѕ РґР°РЅРЅРѕР№ РїСЂСЏРјРѕР№ */
 		Line2D(Point2D p, Line2D l) {
 			this.set(p.copy(), l);
 		}
 		
-		/* Прямая параллельно данной на расстоянии r */
+		/* РџСЂСЏРјР°СЏ РїР°СЂР°Р»Р»РµР»СЊРЅРѕ РґР°РЅРЅРѕР№ РЅР° СЂР°СЃСЃС‚РѕСЏРЅРёРё r */
 		Line2D(double r, Line2D l) {
 			this.set(r, l);
 		}
@@ -544,7 +544,7 @@ public class Geometry2D {
 			return this;
 		}
 		
-		/* Параллельный перенос на вектор v */
+		/* РџР°СЂР°Р»Р»РµР»СЊРЅС‹Р№ РїРµСЂРµРЅРѕСЃ РЅР° РІРµРєС‚РѕСЂ v */
 		Line2D move(Point2D v) {
 			p1.inc(v);
 			p2.inc(v);
@@ -552,7 +552,7 @@ public class Geometry2D {
 			return this;
 		}
 		
-		/* Двигает по нормали на расстояние r */
+		/* Р”РІРёРіР°РµС‚ РїРѕ РЅРѕСЂРјР°Р»Рё РЅР° СЂР°СЃСЃС‚РѕСЏРЅРёРµ r */
 		Line2D shift(double r) {
 			Point2D v = this.normal().normalize(r);
 			p1.dec(v);
@@ -561,24 +561,24 @@ public class Geometry2D {
 			return this;
 		}
 		
-		/* Подставляет точку в уравнение прямой */
+		/* РџРѕРґСЃС‚Р°РІР»СЏРµС‚ С‚РѕС‡РєСѓ РІ СѓСЂР°РІРЅРµРЅРёРµ РїСЂСЏРјРѕР№ */
 		double calc(Point2D p) {
 			return A * p.x + B * p.y + C;
 		}
 		
-		/* Лежит ли точка на прямой */
+		/* Р›РµР¶РёС‚ Р»Рё С‚РѕС‡РєР° РЅР° РїСЂСЏРјРѕР№ */
 		boolean lay(Point2D p) {
 			return abs(this.calc(p)) < EPS;
 		}
 		
-		/* Содержит ли отрезок прямую */
+		/* РЎРѕРґРµСЂР¶РёС‚ Р»Рё РѕС‚СЂРµР·РѕРє РїСЂСЏРјСѓСЋ */
 		boolean contains(Point2D p) {
 			if (!lay(p))
 				return false;
 			return range(0.0, this.getT(p), 1.0);
 		}
 		
-		/* Для точек лежащих на прямой возвращает параметр соответствуюущий им */
+		/* Р”Р»СЏ С‚РѕС‡РµРє Р»РµР¶Р°С‰РёС… РЅР° РїСЂСЏРјРѕР№ РІРѕР·РІСЂР°С‰Р°РµС‚ РїР°СЂР°РјРµС‚СЂ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋСѓС‰РёР№ РёРј */
 		double getT(Point2D p) {
 //			check(this.lay(p));
 			if (!this.lay(p))
@@ -590,22 +590,22 @@ public class Geometry2D {
 			throw new RuntimeException("Bad line");
 		}
 		
-		/* Возвращает точку по параметру */
+		/* Р’РѕР·РІСЂР°С‰Р°РµС‚ С‚РѕС‡РєСѓ РїРѕ РїР°СЂР°РјРµС‚СЂСѓ */
 		Point2D getPoint(double t) {
 			return new Point2D(p1.x - B * t, p1.y + A * t);
 		}
 		
-		/* Возвращает расстояние до точки */
+		/* Р’РѕР·РІСЂР°С‰Р°РµС‚ СЂР°СЃСЃС‚РѕСЏРЅРёРµ РґРѕ С‚РѕС‡РєРё */
 		double dist(Point2D p) {
 			return abs(this.calc(p)) / sqrt(A * A + B * B);
 		}
 		
-		/* Вектор направления */
+		/* Р’РµРєС‚РѕСЂ РЅР°РїСЂР°РІР»РµРЅРёСЏ */
 		Point2D dir() {
 			return new Point2D(-B, A);
 		}
 		
-		/* Вектор нормали */
+		/* Р’РµРєС‚РѕСЂ РЅРѕСЂРјР°Р»Рё */
 		Point2D normal() {
 			return new Point2D(A, B);
 		}
@@ -615,13 +615,13 @@ public class Geometry2D {
 //			return new Point2D(p.x - A * t, p.y - B * t);
 //		}
 		
-		/* Проекция точки */
+		/* РџСЂРѕРµРєС†РёСЏ С‚РѕС‡РєРё */
 		Point2D projection(Point2D p) {
 			double t = (B * (p1.x - p.x) - A * (p1.y - p.y)) / (A * A + B * B);
 			return new Point2D(p1.x - B * t, p1.y + A * t);
 		}
 		
-		/* Проекция отрезка */
+		/* РџСЂРѕРµРєС†РёСЏ РѕС‚СЂРµР·РєР° */
 		Line2D projection(Line2D l) {
 			return new Line2D(this.projection(l.p1), this.projection(l.p2));
 		}
@@ -632,7 +632,7 @@ public class Geometry2D {
 		}
 	}
 	
-	/* Окружность с центром c и радиусом r */
+	/* РћРєСЂСѓР¶РЅРѕСЃС‚СЊ СЃ С†РµРЅС‚СЂРѕРј c Рё СЂР°РґРёСѓСЃРѕРј r */
 	class Circle2D {
 		Point2D c;
 		double r;
